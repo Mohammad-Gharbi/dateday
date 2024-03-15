@@ -10,14 +10,32 @@ import { useState } from "react"
 export default function Home() {
   const [inputValue, setInputValue] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
+  const [image, setImage] = useState<string>("/dog.jpg")
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
   }
 
-  const handleButtonClick = () => {
-    console.log(inputValue)
+  const handleButtonClick = async () => {
     setLoading(true)
+    setImage("")
+
+    try {
+      const response = await fetch("/api/openai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: inputValue }),
+      })
+
+      const { data: imageUrl } = await response.json()
+      setImage(imageUrl)
+    } catch (err) {
+      console.log(err)
+    }
+
+    setLoading(false)
   }
 
   return (
@@ -42,7 +60,7 @@ export default function Home() {
         {loading ? (
           <Skeleton className="w-[28rem] h-[28rem] rounded-md" />
         ) : (
-          <img className="rounded-md" src="/dog.jpg" alt="" />
+          <img className="rounded-md" src={image} alt="generated image" />
         )}
       </div>
     </div>
