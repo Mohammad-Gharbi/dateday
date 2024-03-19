@@ -4,10 +4,10 @@ export default function Hero() {
   return (
     <div className="pt-24 md:px-0 px-8 flex flex-col items-center justify-center gap-4">
       <div className="text-center text-neutral-900 dark:text-neutral-50 text-3xl md:text-4xl font-bold">
-        AI Image Generator.
+        AI Q&A.
       </div>
-      <div className="text-xs md:text-sm text-center max-w-[35em] text-neutral-700 dark:text-neutral-300 font-medium">
-        AI art app that turns your words into images using OpenAI's DALL-E.
+      <div className="text-xs md:text-sm text-center max-w-[36em] text-neutral-700 dark:text-neutral-300 font-medium">
+        AI app that answers your questions using Google's GeminiAI.
       </div>
     </div>
   )

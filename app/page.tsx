@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { RxReload } from "react-icons/rx"
 import { useState } from "react"
+import Markdown from "react-markdown"
 
 export default function Home() {
   const [inputValue, setInputValue] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
-  const [image, setImage] = useState<string>("/dog.jpg")
+  const [text, setText] = useState<string>("")
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
@@ -18,10 +19,10 @@ export default function Home() {
 
   const handleButtonClick = async () => {
     setLoading(true)
-    setImage("")
+    setText("")
 
     try {
-      const response = await fetch("/api/openai", {
+      const response = await fetch("/api/gemini", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,10 +30,11 @@ export default function Home() {
         body: JSON.stringify({ prompt: inputValue }),
       })
 
-      const { data: imageUrl } = await response.json()
-      setImage(imageUrl)
-    } catch (err) {
-      console.log(err)
+      const { data: text } = await response.json()
+
+      setText(text.text)
+    } catch (err: any) {
+      // console.log(err)
     }
 
     setLoading(false)
@@ -43,7 +45,7 @@ export default function Home() {
       <Hero />
       <div className="w-[28rem] flex flex-row justify-center items-center gap-4">
         <Input
-          placeholder="eg. Van Gough inspired portrait of a dog"
+          placeholder="eg. what is AI"
           value={inputValue}
           onChange={handleInputChange}
         />
@@ -58,9 +60,16 @@ export default function Home() {
       </div>
       <div className="w-[28rem]">
         {loading ? (
-          <Skeleton className="w-[28rem] h-[28rem] rounded-md" />
+          <div className="flex flex-col space-y-3">
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[28rem]" />
+              <Skeleton className="h-4 w-[20rem]" />
+            </div>
+          </div>
         ) : (
-          <img className="rounded-md" src={image} alt="generated image" />
+          <div className="rounded-md bg-neutral-100 dark:bg-neutral-800 w-[28rem] h-fit p-4">
+            &gt; <Markdown>{text}</Markdown>
+          </div>
         )}
       </div>
     </div>
