@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { ThemeProvider } from "@/components/ThemeProvider"
 
 export const metadata: Metadata = {
-  title: "New App",
+  title: "AI Q&A.",
 }
 
 export default function RootLayout({
