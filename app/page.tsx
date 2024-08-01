@@ -73,8 +73,8 @@ export default function Home() {
         {loading ? (
           <div className="flex flex-col space-y-3">
             <div className="space-y-2">
-              <Skeleton className="h-4 w-[28rem]" />
-              <Skeleton className="h-4 w-[20rem]" />
+              <Skeleton className="h-4 w-72 md:w-[28rem]" />
+              <Skeleton className="h-4 w-72 md:w-[28rem]" />
             </div>
           </div>
         ) : (
