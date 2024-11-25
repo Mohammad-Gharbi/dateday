@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/ThemeProvider"
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: "AI Q&A",
+  title: "DateDay",
 }
 
 export default function RootLayout({

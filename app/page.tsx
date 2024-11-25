@@ -1,87 +1,80 @@
 "use client"
 
 import Hero from "@/components/Hero"
+import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
-import { RxReload } from "react-icons/rx"
-import { useToast } from "@/components/ui/use-toast"
-import { useState } from "react"
-import Markdown from "react-markdown"
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState<string>("")
-  const [loading, setLoading] = useState<boolean>(false)
-  const [text, setText] = useState<string>("")
+  const [DD, setDD] = useState<string | undefined>("25")
+  const [MM, setMM] = useState<string | undefined>("11")
+  const [YYYY, setYYYY] = useState<string | undefined>("2024")
+  const [day, setDay] = useState<string | undefined>()
 
-  const { toast } = useToast()
+  useEffect(() => {
+    const date = new Date(`${YYYY + "-" + MM + "-" + DD}`)
+    const dayOfWeek = date?.getDay()
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value)
-  }
+    const weekdays = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ]
 
-  const handleButtonClick = async () => {
-    if (inputValue) {
-      setLoading(true)
-      setText("")
+    setDay(weekdays[dayOfWeek ? dayOfWeek : 0])
+  }, [DD, MM, YYYY])
 
-      try {
-        const response = await fetch("/api/gemini", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ prompt: inputValue }),
-        })
+  const handleChange = (e: any, type: string) => {
+    const value = e.target.value
 
-        const { data: text } = await response.json()
-
-        setText(text.text)
-      } catch (err: any) {
-        // console.log(err)
-      }
-
-      setLoading(false)
-    } else {
-      toast({
-        description: "Input field can't be empty.",
-      })
+    switch (type) {
+      case "DD":
+        setDD(value)
+        break
+      case "MM":
+        setMM(value)
+        break
+      case "YYYY":
+        setYYYY(value)
+        break
     }
   }
 
   return (
     <div className="flex flex-col justify-center items-center gap-8">
       <Hero />
-      <div className="w-72 md:w-[28rem] flex flex-col md:flex-row justify-center items-center gap-4">
+      <div className="w-72 md:w-[24rem] flex flex-row justify-center items-center gap-4">
         <Input
-          placeholder="eg. what is AI"
-          value={inputValue}
-          onChange={handleInputChange}
+          className="w-12 md:w-[60%]"
+          type="text"
+          placeholder="DD"
+          value={DD}
+          onChange={(e) => handleChange(e, "DD")}
         />
-        {loading ? (
-          <Button className="w-72 md:w-32" disabled>
-            <RxReload className="mr-2 h-4 w-4 animate-spin" />
-            Generating
-          </Button>
-        ) : (
-          <Button className="w-72 md:w-32" onClick={handleButtonClick}>
-            Generate
-          </Button>
-        )}
+        <Input
+          className="w-12 md:w-[60%]"
+          type="text"
+          placeholder="MM"
+          value={MM}
+          onChange={(e) => handleChange(e, "MM")}
+        />
+        <Input
+          className="w-24 md:w-[100%]"
+          type="text"
+          placeholder="YYYY"
+          value={YYYY}
+          onChange={(e) => handleChange(e, "YYYY")}
+        />
       </div>
-      <div className="w-72 md:w-[28rem]">
-        {loading ? (
-          <div className="flex flex-col space-y-3">
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-72 md:w-[28rem]" />
-              <Skeleton className="h-4 w-72 md:w-[28rem]" />
-            </div>
+      <div className="w-72 md:w-[24rem]">
+        <div className="flex flex-col space-y-3 items-center">
+          <div className="rounded-md bg-neutral-100 dark:bg-neutral-800 w-72 md:w-[24rem] h-fit p-4 text-center text-2xl font-bold">
+            {day}
           </div>
-        ) : (
-          <div className="rounded-md bg-neutral-100 dark:bg-neutral-800 w-72 md:w-[28rem] h-fit p-4">
-            &gt; <Markdown>{text}</Markdown>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   )
