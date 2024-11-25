@@ -1,3 +1,3 @@
 ### DateDay
 
-https://ai-text-generator-mhmd.vercel.app
+https://dateday.vercel.app
